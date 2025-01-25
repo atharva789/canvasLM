@@ -1,0 +1,6 @@
+2025-01-25 00:45:48.228 EST [33160] LOG:  starting PostgreSQL 14.15 (Postgres.app) on aarch64-apple-darwin20.6.0, compiled by Apple clang version 12.0.5 (clang-1205.0.22.9), 64-bit
+2025-01-25 00:45:48.229 EST [33160] LOG:  listening on IPv6 address "::1", port 5433
+2025-01-25 00:45:48.230 EST [33160] LOG:  listening on IPv4 address "127.0.0.1", port 5433
+2025-01-25 00:45:48.230 EST [33160] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5433"
+2025-01-25 00:45:48.232 EST [33161] LOG:  database system was shut down at 2025-01-25 00:45:48 EST
+2025-01-25 00:45:48.239 EST [33160] LOG:  database system is ready to accept connections
