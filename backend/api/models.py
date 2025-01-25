@@ -3,10 +3,11 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 class Student(models.Model):
-  user = models.OneToOneField(User, on_delete=models.CASCADE)
-  api_key = models.CharField(max_length=100)  
+  api_key = models.CharField(max_length=100, primary_key=True, unique=True)
+  name = models.CharField(max_length=100)
+  canvas_sid = models.CharField(max_length=100)  
   def __str__(self):
-    return self.user.username
+    return self.name
   
 class Course(models.Model):
   name = models.CharField(max_length=100)
