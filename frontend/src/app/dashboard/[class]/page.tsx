@@ -10,8 +10,10 @@ const Class = () => {
     const [accessToken,setAccessToken] = useState<String | null>("0");
     const [courseName, setCourseName] = useState<String | null>("");
     const [assignmets, setAssignments] = useState([]);
+    const [loading,setLoading] = useState(false);
 
     const getData = async() => {
+        setLoading(true);
         const arr = window.location.search.split("&")
         const classWindowToken = arr[0]
         const accessWindowToken = arr[1]
@@ -34,7 +36,7 @@ const Class = () => {
         setAssignments(data);
 
         // Save Data
-        if (data.length ===0) return;
+        setLoading(false)
     }
 
     const handleClick = () => {
@@ -93,6 +95,11 @@ const Class = () => {
                 <p>Upcoming Assignments:</p>
                 {/* Add a dynamic list of lectures, or anything related */}
 
+              {loading ? (
+                <div className="flex items-center text-center justify-center ">
+                    <div className="loader"></div>
+                </div>
+                ) : (
                 <div className="grid grid-cols-1 gap-4 mt-10 ">
                   {assignmets.map((value, index) => ( // Filter by due Date
                     <div key={index}    className="flex flex-col border border-slate-300 items-center justify-center">
@@ -103,6 +110,7 @@ const Class = () => {
                     </div>
                   ))}
                 </div>
+                )}
 
               </div>
             </div>

@@ -3,15 +3,18 @@ import React, { useEffect, useState } from 'react'
 import axios from "axios";
 import { useRouter } from 'next/navigation'
 import { access } from 'fs';
+import "../style/loading.css";
 
 const Dashboard = () => {
     const [accessToken,setAccessToken] = useState<String | null>("");
 
     const [classes, setClasses] = useState([]);
+    const [loading,setLoading] = useState(false);
     const router = useRouter();
 
 
     const getData = async() => {
+        setLoading(true);   
         const params : URLSearchParams = new URLSearchParams(window.location.search);
         setAccessToken(params.get("q"));
         if (!accessToken) return;
@@ -23,6 +26,7 @@ const Dashboard = () => {
         const {response, formattedResponse} = await res.json();
         setClasses(response);
         console.log(formattedResponse)
+        setLoading(false);
     }   
 
     const handleClick = async (value) => {
@@ -36,14 +40,20 @@ const Dashboard = () => {
     },[accessToken])
 
 
-    if (classes.length === 0) return;
     const data = classes.filter((value) => value.name);
     return (
         <div className='p-[2rem] '>
             <div className="flex items-center justify-center mb-10">
                 <p className="text-3xl ">Your Classes</p>
             </div>
-            <div className="grid grid-cols-1    sm:grid-cols-3 gap-4">
+
+            {loading ? (
+            <div className="flex items-center text-center justify-center h-[50vh] ">
+                <div className="loader"></div>
+            </div>
+            ) : (
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {data.map((value, index) => (
 
                     <div onClick={() => handleClick(value)} key={index} className="cursor-pointer flex items-center justify-center text-center border border-slate-300 shadow-md gap-2 p-4 rounded-md">
@@ -56,6 +66,9 @@ const Dashboard = () => {
 
                 ))}
             </div>
+            )}
+
+            
         </div>
     )
 }
