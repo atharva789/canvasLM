@@ -37,15 +37,6 @@ async def login(api_key: str = Body(..., embed=True)):
     if student:
         return {"message": "Student already exists", "student": student}
 
-    # Load and store courses
-    await prisma.course.create(
-      data={
-        "id": course.id,
-        "name": course.name,
-        "StudentID": user.id
-      }
-    )
-
     # Create a new student record in the database
     new_student = await prisma.student.create(
       data={

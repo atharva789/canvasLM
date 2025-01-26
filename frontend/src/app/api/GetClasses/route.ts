@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 export async function POST(req:Request) {
     
     const { accessToken } = await req.json();
-    const data = await fetch("https://canvas.case.edu/api/v1/users/self/courses?per_page=5", {
+    const data = await fetch("https://canvas.case.edu/api/v1/users/self/courses?per_page=50", {
     headers: {Authorization: `Bearer ${accessToken}`}})    
 
     const formattedResponse = [];
