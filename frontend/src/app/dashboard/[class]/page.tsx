@@ -20,7 +20,7 @@ const Class = () => {
         const accessTokenParam : URLSearchParams = new URLSearchParams(accessWindowToken);
         const accessNameParam : URLSearchParams = new URLSearchParams(accessNameToken);
         setCourseName(accessNameParam.get("q"))
-
+        setAccessToken(accessTokenParam.get("q"))
         setClassId(params.get("q"))
         
         const response = await fetch("/api/GetAssignments", {
@@ -37,6 +37,10 @@ const Class = () => {
         if (data.length ===0) return;
     }
 
+    const handleClick = () => {
+      //router.push(`/study?q=${classId}&?q=${accessToken}&?q=${assignmets}`)
+      console.log(classId,accessToken,courseName); 
+    }
 
     useEffect(() => {
         getData();
@@ -52,17 +56,19 @@ const Class = () => {
             <div className="space-y-4">
               <button
                 className="w-full py-2 text-left px-4 rounded-lg hover:bg-gray-700 focus:outline-none"
-                
-              >
+                onClick={() => router.push(`/calendar?q=${classId}&?q=${accessToken}&?q=${courseName}`) }
+              > 
                 Calendar
               </button>
               <button
                 className="w-full py-2 text-left px-4 rounded-lg hover:bg-gray-700 focus:outline-none"
+                onClick={() => router.push(`/uploadNotes?q=${classId}&?q=${accessToken}&?q=${courseName}`) }
               >
                 Upload Notes
               </button>
               <button
                 className="w-full py-2 text-left px-4 rounded-lg hover:bg-gray-700 focus:outline-none"
+                onClick={() => router.push(`/studyGuide?q=${classId}&?q=${accessToken}&?q=${courseName}`) }
               >
                 Study Guides
               </button>
@@ -89,7 +95,7 @@ const Class = () => {
 
                 <div className="grid grid-cols-1 gap-4 mt-10 ">
                   {assignmets.map((value, index) => ( // Filter by due Date
-                    <div className="flex flex-col border border-slate-300 items-center justify-center">
+                    <div key={index}    className="flex flex-col border border-slate-300 items-center justify-center">
                       <div className="flex">{value.name}</div>
                       <p className="">Points possible : {value.pointsPossible}</p>
                       <p className="">Due At : {value.dueAt}</p>
