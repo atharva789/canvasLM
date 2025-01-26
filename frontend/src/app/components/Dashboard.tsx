@@ -15,14 +15,14 @@ const Dashboard = () => {
         const params : URLSearchParams = new URLSearchParams(window.location.search);
         setAccessToken(params.get("q"));
         if (!accessToken) return;
-        const response = await fetch("/api/GetClasses", {
+        const res = await fetch("/api/GetClasses", {
             method:"POST",
             body: JSON.stringify({accessToken : accessToken })
 
         });
-
-        const data = await response.json();
-        setClasses(data);
+        const {response, formattedResponse} = await res.json();
+        setClasses(response);
+        console.log(formattedResponse)
     }   
 
     const handleClick = async (value) => {

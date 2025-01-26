@@ -1,16 +1,20 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Body
 from prisma import Prisma
 from routers import courses
 from canvasapi import Canvas
 import os
 from dotenv import load_dotenv
 from client import prisma
+from pydantic import BaseModel
 
 load_dotenv()
 
 app = FastAPI()
 
 app.include_router(courses.router)
+
+class LoginRequest(BaseModel):
+    api_key: str
 
 @app.on_event("startup")
 async def startup():
@@ -25,15 +29,31 @@ def read_root():
   return {"Hello": "World"}
 
 @app.post("/login/")
-async def login(api_key: str):
-  #create student with api_key
-  canvas = Canvas(os.getenv("CANVAS_URL"), api_key)
-  user = canvas.get_current_user()
-  username, email = user.name, user.email
+async def login(api_key: str = Body(..., embed=True)):
   
-  #load courses
-  courses = user.get_courses()
-  for course in courses:
-    await prisma.course.create(data={"api_key": api_key, "name": course.name, "id": course.id})
-    
-  return await prisma.student.create(data={"api_key": api_key, "name": username, "email": email})
+  try:
+    # Check if the student already exists
+    student = await prisma.student.find_first(where={"apiKey": api_key})
+    if student:
+        return {"message": "Student already exists", "student": student}
+
+    # Load and store courses
+    await prisma.course.create(
+      data={
+        "id": course.id,
+        "name": course.name,
+        "StudentID": user.id
+      }
+    )
+
+    # Create a new student record in the database
+    new_student = await prisma.student.create(
+      data={
+        "apiKey": api_key,
+      }
+    )
+
+    return {"message": "Student created successfully", "student": new_student}
+
+  except Exception as e:
+    raise HTTPException(status_code=400, detail=str(e))

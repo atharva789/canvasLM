@@ -12,10 +12,15 @@ export async function POST(req:Request) {
         headers: {Authorization: `Bearer ${accessToken}`},
         method:"GET",
     })
-
+    const formattedRes = []
     const moduleData = await modules.json();
-    for (let i = 0; i < moduleData.length; i++) { //
+    
 
+    for (let i = 0; i < moduleData.length; i++) { //
+        formattedRes.push({
+            module : moduleData[i].name,
+            downloads : []
+        })
         const moduleItems = await fetch(`https://canvas.case.edu/api/v1/courses/${course_id}/modules/${moduleData[i].id}/items`, {
             headers: {Authorization: `Bearer ${accessToken}`},
             method:"GET",
@@ -32,7 +37,6 @@ export async function POST(req:Request) {
             })
 
             const modulePdfData = await modulePdf.json();
-
             if (!modulePdfData.url) continue;
 
             const downloadPdf = await fetch(modulePdfData.url, {
@@ -43,11 +47,9 @@ export async function POST(req:Request) {
             const downloadPdfData = await downloadPdf.json();
 
             if (regex.test(downloadPdfData.url)) {
-                console.log(downloadPdfData.url);
-                pdfArray.push(downloadPdfData.url)
+                formattedRes[i].downloads.push(downloadPdfData.url);
+                //pdfArray.push(downloadPdfData.url);
             }
-            
-
 
         }
 
@@ -56,6 +58,6 @@ export async function POST(req:Request) {
     
     
 
-    return NextResponse.json({pdfArray});
+    return NextResponse.json({formattedRes});
   
 }

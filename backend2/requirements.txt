@@ -38,3 +38,4 @@ fastapi
 uvicorn
 prisma
 python-dotenv==1.0.1
+pyandtic=1.8.0
