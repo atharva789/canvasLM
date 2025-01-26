@@ -1,11 +1,10 @@
 import { NextResponse } from 'next/server';
-const accessToken = "5590~GxDyuHaneAhvu6NyyJucMaaJxQhCEZURRTwxZkatwtntFFeJE67yLWWxk8KQ8BhX";
 
 // Gets all the downloadable links from canvas for accessToken
 
 export async function POST(req:Request) {
 
-    const { course_id } = await req.json();
+    const { course_id,accessToken } = await req.json();
     const regex = /\bdownload\b/i;
     const pdfArray : String[] = []
     // https://canvas.case.edu/api/v1/courses/${course_id}/modules/324698/items/2107689/
@@ -15,7 +14,7 @@ export async function POST(req:Request) {
     })
 
     const moduleData = await modules.json();
-    for (let i = 0; i < moduleData.length; i++) {
+    for (let i = 0; i < moduleData.length; i++) { //
 
         const moduleItems = await fetch(`https://canvas.case.edu/api/v1/courses/${course_id}/modules/${moduleData[i].id}/items`, {
             headers: {Authorization: `Bearer ${accessToken}`},

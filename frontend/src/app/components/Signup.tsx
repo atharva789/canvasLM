@@ -18,7 +18,7 @@ const Signup = () => {
         e.preventDefault();
         console.log(email,password,accessToken)
 
-        router.push("/dashboard")
+        router.push(`/dashboard?q=${accessToken}`)
 
 
     }

@@ -1,26 +1,39 @@
 "use client";
 import React, { useEffect, useState } from 'react'
 import axios from "axios";
+import { useRouter } from 'next/navigation'
+import { access } from 'fs';
 
 const Dashboard = () => {
-    const accessToken = "5590~GxDyuHaneAhvu6NyyJucMaaJxQhCEZURRTwxZkatwtntFFeJE67yLWWxk8KQ8BhX";
+    const [accessToken,setAccessToken] = useState<String | null>("");
+
     const [classes, setClasses] = useState([]);
+    const router = useRouter();
+
 
     const getData = async() => {
-        const response = await fetch("/api/GetClasses", {method:"GET"});
+        const params : URLSearchParams = new URLSearchParams(window.location.search);
+        setAccessToken(params.get("q"));
+        if (!accessToken) return;
+        const response = await fetch("/api/GetClasses", {
+            method:"POST",
+            body: JSON.stringify({accessToken : accessToken })
+
+        });
 
         const data = await response.json();
         setClasses(data);
-    }
+    }   
 
     const handleClick = async (value) => {
        // Navigate to some webpage and display sht idk 
        console.log(value);
+       router.push(`/dashboard/class_id?q=${value.id}&?q=${accessToken}&?q=${value.name}`)
     }
 
     useEffect(() => {
         getData();
-    },[])
+    },[accessToken])
 
 
     if (classes.length === 0) return;

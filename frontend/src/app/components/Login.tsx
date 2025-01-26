@@ -11,6 +11,7 @@ const Signup = () => {
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [email, setEmail] = useState<String>("");
     const [password, setPassword] = useState<String>("");
+    const [accessToken, setAccessToken] = useState<String>("");
     const router = useRouter();
 
     const handleSubmit = (e : any) => {
@@ -20,7 +21,7 @@ const Signup = () => {
 
         // Send to DB
 
-        router.push("/dashboard")
+        router.push(`/dashboard?q=${accessToken}`)
 
 
 
@@ -47,7 +48,11 @@ const Signup = () => {
                                 <RxEyeOpen />
                             )}
                         </div>
-                    </div>     
+                    </div>   
+
+                    <div className="mb-4 flex items-center gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C]">
+                        <input  onChange={e => setAccessToken(e.target.value)} type="text" placeholder="Access Token" className="bg-transparent outline-none text-white" required/>
+                    </div>    
 
                 
                     <input type="submit" className="border border-slate-300 px-8 py-2 rounded-full cursor-pointer active:scale-95" value="Login" />
